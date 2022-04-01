@@ -13,12 +13,14 @@ export default class Input extends Component {
   
   onClrHandler = () => {
     this.setState({value: ''})
+    this.props.clearData();
   };
 
   onKeyupHandler = e => {
     if (e.code === 'Escape') {
       this.onClrHandler()
-    }
+    } else
+    this.props.inputHandler(this.state.value);
   }  
 
   render(){

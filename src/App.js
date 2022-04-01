@@ -7,14 +7,17 @@ import {BrowserRouter, Routes, Route} from "react-router-dom";
 
 export default class App extends Component {
 
-  state = {}
+  state = {
+    logined: true,
+  }
 
   render() {  
     return (
       <BrowserRouter>
-        
           <div className="App">
-            <Header/>
+            <Header
+              logined = {this.state.logined}
+            />
             <Routes>
               <Route path='/' element={<LoginPage />} />
               <Route path='/contacts' element={<ContactPage />} />

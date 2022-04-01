@@ -1,0 +1,32 @@
+.searchContact {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 300px;
+
+}
+
+
+/* Tablet portrait */
+@media screen and (min-width: 600px) {
+  .contactItem {
+    width: 48%;
+  }
+
+}
+
+/* Tablet landscape */
+@media screen and (min-width: 760px) {
+
+}
+
+/* Desktop */
+@media screen and (min-width: 1024px) {
+  .contactItem {
+    width: 32%;
+  }  
+}
+
+/* WW Desktop */
+@media screen and (min-width: 1200px) {}
