@@ -22,7 +22,7 @@ export default class App extends Component {
               <Route path='/' element={<LoginPage />} />
               <Route path='/contacts' element={<ContactPage />} />
             </Routes>
-          </div>           
+          </div>
         
        
       </BrowserRouter>

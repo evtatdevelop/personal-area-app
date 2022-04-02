@@ -15,6 +15,7 @@ export default class ContactPage extends Component {
     filtered: [],
     currentContact: {},
     delForm: false,
+    editForm: false,
   }
 
   service = new Service();
@@ -24,6 +25,15 @@ export default class ContactPage extends Component {
   }
 
   componentDidMount() {
+    this.getContacts();
+  }
+
+  loading = () => this.setState({loading: true})
+  noLoading = () => this.setState({loading: false})
+  getContactById = id => this.state.contacts.find(item => item.id === id);
+  clearForms = () => this.setState({currentContact: {}, delForm: false, editForm: false, });
+
+  getContacts = () => {
     this.loading();
     this.service.getContacts()
     .then(contacts => {
@@ -32,43 +42,79 @@ export default class ContactPage extends Component {
     })
   }
 
-  loading = () => this.setState({loading: true})
-  noLoading = () => this.setState({loading: false})
-
-  newContact = () => console.log('New contact');
-
   delContact = id => {
     this.loading();
-    this.service.delContact(id)
-    .then(result => {
-      console.log(result);  
-      // TODO: Currently the result is an array of users. In production, this should be a Boolean value that allows the data to be changed in the application or it can be a new array of users.
+    this.clearForms();
+    this.service.delContact(id) // TODO: Currently, the delete result on the server is fake.
+    .then(() => { 
+      // ? The state is renewed to simulate real work. In production, the getContacts function must be executed.
       const cleanData = [...this.state.contacts];
       const contacts = cleanData.filter(item => item.id !== id)
-      this.setState({
-        contacts, 
-        filtered: contacts,
-        currentContact: {},
-        delForm: false     
-      });
-
+      this.setState({contacts, filtered: contacts});
       this.noLoading();
+      // ?
+    })
+  } 
+
+  addContact = dataContact => {
+    this.loading();
+    this.clearForms();
+    this.service.addContact(dataContact)  // TODO: Currently, the post contact on the server is fake.
+    .then(contact => {
+      // ? The state is renewed to simulate real work. In production, the getContacts function must be executed.
+        contact.id = this.state.contacts.length + 1;
+        const contacts = [...this.state.contacts];
+        contacts.push(contact)
+        this.setState({contacts, filtered: contacts});
+        this.noLoading();
+      // ?
     })
   }
 
-  getContactById = id => this.state.contacts.find(item => item.id === id);
- 
+  updateContact = dataContact => {
+    this.loading();
+    this.clearForms();
+    this.service.updateContact(dataContact)  // TODO: Currently, the update contact on the server is fake.
+    .then(contact => {
+      // ? The state is renewed to simulate real work. In production, the getContacts function must be executed.
+        const cleanData = [...this.state.contacts];
+        const contacts = cleanData.map(item => {
+          if (item.id !== contact.id) return item;
+          return contact;
+        })
+        this.setState({contacts, filtered: contacts});
+        this.noLoading();
+      // ?
+    })
+  }
+
+    // this.addContact({
+    //   name: 'Evgenii Tatarenko',
+    //   phone: '+792349111612',
+    //   email: 'tatarenkoe@gmali.com',
+    // })
+
+    // this.updateContact({
+    //   id: 3,
+    //   name: 'Barbara Santa',
+    //   phone: '+6699349111612',
+    //   email: 'tester@test.tst',
+    // })
+
+  // TODO: Edit / Add form
+
+  handleClickAdd = () => {
+    this.setState({editForm: true});
+  };
 
   handleClickEdit = id => {
-    console.log('Edit', id)
     const currentContact = this.getContactById(id);
-    console.log(currentContact);
-    this.setState({currentContact}) 
+    this.setState({currentContact, editForm: true});
   };
   
   handleClickDel = id => {
     const currentContact = this.getContactById(id);
-    this.setState({currentContact, delForm: true})
+    this.setState({currentContact, delForm: true});
   }
 
   filterHandler = value => {
@@ -81,6 +127,7 @@ export default class ContactPage extends Component {
     this.setState({filtered})
   }
   clearFilter = () => this.setState({filtered: this.state.contacts});
+
 
   render() {
     const {filtered, loading, error, currentContact, delForm} = this.state;
@@ -96,7 +143,7 @@ export default class ContactPage extends Component {
           contacts = {filtered}
           handleClickEdit = {this.handleClickEdit}
           handleClickDel = {this.handleClickDel}
-          newContact = {this.newContact}
+          newContact = {this.handleClickAdd}
       />
     </>);
     
@@ -108,8 +155,7 @@ export default class ContactPage extends Component {
               contact = {currentContact}
               handlerClick = {this.delContact}   
             />
-          : null  
-        }
+          : null }
 
         { loading ? <Spinner/> : content }
 
