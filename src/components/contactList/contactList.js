@@ -8,6 +8,10 @@ const ContactList = props => {
 
   return (
     <ul className={classes.contactList}>
+      <button type="button" 
+        className = {classes.addButton}
+        onClick = {newContact}
+      ><FontAwesomeIcon icon={faCirclePlus} /></button>
       {contacts.map(item => 
         <ContactItem
           key = {item.id}
@@ -19,10 +23,6 @@ const ContactList = props => {
           handleClickDel = {handleClickDel}
         />
       )}
-      <button type="button" 
-        className = {classes.addButton}
-        onClick = {newContact}
-      ><FontAwesomeIcon icon={faCirclePlus} /></button>
     </ul>
   )
  }

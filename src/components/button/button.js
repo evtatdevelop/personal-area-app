@@ -1,9 +1,13 @@
 import classes from './button.module.scss';
 
 const Button = props => {
-  const {label, type} = props;
+  const {id, label, type, handlerClick} = props;
   return (
-    <button type={type} className={classes.button}>{label}</button>
+    <button 
+      type={type} 
+      className={classes.button}
+      onClick={handlerClick}
+    >{label}</button>
   )
 }
 
