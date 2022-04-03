@@ -6,6 +6,11 @@ export default class Input extends Component {
 
   state = {value: '',}
 
+  componentDidMount() {
+    const {value} = this.props;
+    if (value) this.setState({value})
+  }
+
   onInputHandler = e => {
     const {value} = e.target;
     this.setState({value});

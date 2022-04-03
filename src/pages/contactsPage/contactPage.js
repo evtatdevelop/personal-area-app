@@ -6,7 +6,8 @@ import Service from '../../services';
 import Spinner from '../../components/spinner';
 import Error from '../../components/Error';
 import DelContactForm from '../../components/delContactForm';
-import EditContactForm from '../../components/addContactForm';
+import AddContactForm from '../../components/addContactForm';
+import EditContactForm from '../../components/editContactForm';
 export default class ContactPage extends Component {
 
   state = {
@@ -17,6 +18,7 @@ export default class ContactPage extends Component {
     currentContact: {},
     delForm: false,
     addForm: false,
+    editForm: false,
   }
 
   service = new Service();
@@ -58,7 +60,7 @@ export default class ContactPage extends Component {
     })
   } 
 
-  addContact = (dataContact) => {
+  addContact = dataContact => {
     this.loading();
     this.clearForms();
     this.service.addContact(dataContact)  // TODO: Currently, the post contact on the server is fake.
@@ -76,29 +78,38 @@ export default class ContactPage extends Component {
   updateContact = dataContact => {
     this.loading();
     this.clearForms();
-    this.service.updateContact(dataContact)  // TODO: Currently, the update contact on the server is fake.
-    .then(contact => {
-      // ? The state is renewed to simulate real work. In production, the getContacts function must be executed.
-        const cleanData = [...this.state.contacts];
-        const contacts = cleanData.map(item => {
-          if (item.id !== contact.id) return item;
-          return contact;
-        })
-        this.setState({contacts, filtered: contacts});
-        this.noLoading();
-      // ?
-    })
+
+    if (isNaN(dataContact.id)) {
+
+      // ! This is a demo code to update added contacts without requesting the server.
+      const cleanData = [...this.state.contacts];
+      const contacts = cleanData.map(item => {
+        if (item.id !== dataContact.id) return item;
+        return dataContact;
+      })
+      this.setState({contacts, filtered: contacts});
+      this.noLoading();
+      // !
+
+    } else {
+      
+      // Working code
+      this.service.updateContact(dataContact)  // TODO: Currently, the update contact on the server is fake.
+        .then(contact => {
+          // ? The state is renewed to simulate real work. In production, the getContacts function must be executed.
+            const cleanData = [...this.state.contacts];
+            const contacts = cleanData.map(item => {
+              if (item.id !== contact.id) return item;
+              return contact;
+            })
+            this.setState({contacts, filtered: contacts});
+            this.noLoading();
+          // ?
+        })     
+      //
+       
+    }
   }
-
-
-    // this.updateContact({
-    //   id: 3,
-    //   name: 'Barbara Santa',
-    //   phone: '+6699349111612',
-    //   email: 'tester@test.tst',
-    // })
-
-  // TODO: Edit / Add form
 
   handleClickAdd = () => {
     this.setState({addForm: true});
@@ -126,7 +137,7 @@ export default class ContactPage extends Component {
   
 
   render() {
-    const {filtered, loading, error, currentContact, delForm, addForm} = this.state;
+    const {filtered, loading, error, currentContact, delForm, addForm, editForm} = this.state;
 
     if (error) return <Error/>;
 
@@ -158,9 +169,18 @@ export default class ContactPage extends Component {
         }
 
         { addForm
+          ? <AddContactForm
+              // contact = {currentContact}
+              handlerSubmit = {this.addContact}  
+              handlerCancel = {this.clearForms}   
+            />
+          : null
+        }
+
+        { editForm
           ? <EditContactForm
               contact = {currentContact}
-              handlerSubmit = {this.addContact}  
+              handlerSubmit = {this.updateContact}  
               handlerCancel = {this.clearForms}   
             />
           : null
