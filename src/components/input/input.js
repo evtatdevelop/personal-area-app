@@ -24,7 +24,7 @@ export default class Input extends Component {
   }  
 
   render(){
-    const {id, type, readonly, placeholder, autofocus, arialabel, handlerClick} = this.props;
+    const {id, type, readonly, placeholder, autofocus, arialabel, handlerClick,} = this.props;
 
     return (
       <div className={classes.inputBox}>
@@ -42,6 +42,7 @@ export default class Input extends Component {
           onClick={handlerClick}
           autoComplete="off"
         />
+
         {this.state.value && !readonly
           ? <button 
               type="button" 

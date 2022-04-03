@@ -1,4 +1,4 @@
-import {Component} from 'react'
+import React, {Component} from 'react'
 import classes from './contactPage.module.scss';
 import ContactList from '../../components/contactList';
 import SearchContact from '../../components/searchContact';
@@ -6,6 +6,7 @@ import Service from '../../services';
 import Spinner from '../../components/spinner';
 import Error from '../../components/Error';
 import DelContactForm from '../../components/delContactForm';
+import EditContactForm from '../../components/addContactForm';
 export default class ContactPage extends Component {
 
   state = {
@@ -15,7 +16,7 @@ export default class ContactPage extends Component {
     filtered: [],
     currentContact: {},
     delForm: false,
-    editForm: false,
+    addForm: false,
   }
 
   service = new Service();
@@ -31,7 +32,8 @@ export default class ContactPage extends Component {
   loading = () => this.setState({loading: true})
   noLoading = () => this.setState({loading: false})
   getContactById = id => this.state.contacts.find(item => item.id === id);
-  clearForms = () => this.setState({currentContact: {}, delForm: false, editForm: false, });
+  clearForms = () => this.setState({currentContact: {}, delForm: false, editForm: false, addForm: false, });
+  clearFilter = () => {this.setState({filtered: this.state.contacts})}
 
   getContacts = () => {
     this.loading();
@@ -42,7 +44,7 @@ export default class ContactPage extends Component {
     })
   }
 
-  delContact = id => {
+  delContact = (id) => {
     this.loading();
     this.clearForms();
     this.service.delContact(id) // TODO: Currently, the delete result on the server is fake.
@@ -56,15 +58,15 @@ export default class ContactPage extends Component {
     })
   } 
 
-  addContact = dataContact => {
+  addContact = (dataContact) => {
     this.loading();
     this.clearForms();
     this.service.addContact(dataContact)  // TODO: Currently, the post contact on the server is fake.
     .then(contact => {
       // ? The state is renewed to simulate real work. In production, the getContacts function must be executed.
-        contact.id = this.state.contacts.length + 1;
+        contact.id = Date.now().toString(32);
         const contacts = [...this.state.contacts];
-        contacts.push(contact)
+        contacts.unshift(contact)
         this.setState({contacts, filtered: contacts});
         this.noLoading();
       // ?
@@ -88,11 +90,6 @@ export default class ContactPage extends Component {
     })
   }
 
-    // this.addContact({
-    //   name: 'Evgenii Tatarenko',
-    //   phone: '+792349111612',
-    //   email: 'tatarenkoe@gmali.com',
-    // })
 
     // this.updateContact({
     //   id: 3,
@@ -104,7 +101,7 @@ export default class ContactPage extends Component {
   // TODO: Edit / Add form
 
   handleClickAdd = () => {
-    this.setState({editForm: true});
+    this.setState({addForm: true});
   };
 
   handleClickEdit = id => {
@@ -126,26 +123,27 @@ export default class ContactPage extends Component {
     )
     this.setState({filtered})
   }
-  clearFilter = () => this.setState({filtered: this.state.contacts});
-
+  
 
   render() {
-    const {filtered, loading, error, currentContact, delForm} = this.state;
+    const {filtered, loading, error, currentContact, delForm, addForm} = this.state;
 
     if (error) return <Error/>;
 
-    const content = (<>
+    const search = (
       <SearchContact
         inputHandler = {this.filterHandler}
         clearData = {this.clearFilter}
       />
+    );
+    const contacts = (  
       <ContactList
           contacts = {filtered}
           handleClickEdit = {this.handleClickEdit}
           handleClickDel = {this.handleClickDel}
           newContact = {this.handleClickAdd}
       />
-    </>);
+    );
     
     return(
       <div className={classes.contacts}>
@@ -153,11 +151,24 @@ export default class ContactPage extends Component {
         { delForm
           ? <DelContactForm
               contact = {currentContact}
-              handlerClick = {this.delContact}   
+              handlerSubmit = {this.delContact}  
+              handlerCancel = {this.clearForms}   
             />
-          : null }
+          : null
+        }
 
-        { loading ? <Spinner/> : content }
+        { addForm
+          ? <EditContactForm
+              contact = {currentContact}
+              handlerSubmit = {this.addContact}  
+              handlerCancel = {this.clearForms}   
+            />
+          : null
+        }
+
+        { loading ? <Spinner/> : search }
+
+        {contacts}
 
       </div>
     )

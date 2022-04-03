@@ -1,4 +1,4 @@
-.delContactForm {
+.addContactForm {
   position: fixed;
   top: 0;
   left: 0;
@@ -13,7 +13,7 @@
   form {
     position: fixed;
     display: flex;
-    height: 180px;
+    min-height: 180px;
     width: 300px;
     flex-direction: column;
     justify-content: space-between;
@@ -23,11 +23,22 @@
     border-radius: 3px;
     padding: 10px;
 
+    &>div {
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    .errMeassage {
+      position: absolute;
+      width: 100%;
+      color: orangered;
+      font-size: 12px;
+    }
+
     .butttons {
       width: 100%;
       display: flex;
       justify-content: space-between;
-
+      margin: 10px 0 0 0;
       button {
         &:nth-child(2) {
           margin-left: 10px;

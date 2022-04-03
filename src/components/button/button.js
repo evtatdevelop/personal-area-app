@@ -1,7 +1,7 @@
 import classes from './button.module.scss';
 
 const Button = props => {
-  const {id, label, type, handlerClick} = props;
+  const {label, type, handlerClick} = props;
   return (
     <button 
       type={type} 
