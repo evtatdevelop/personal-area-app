@@ -9,9 +9,6 @@ export default class EditContactForm extends Component {
     id: null,
     name: '',
     phone: '',
-    email: '',
-    noName: false,
-    noMail: false,
   }
 
   componentDidMount() {
@@ -23,16 +20,7 @@ export default class EditContactForm extends Component {
     e.target.reset();
     e.preventDefault();
     const {name, email} = this.state;
-    if ( !name ) {
-      this.setState({noName: true});
-      return;
-    } else this.setState({noName: false});
-
-    if ( !email ) {
-      this.setState({noMail: true});
-      return;
-    } else this.setState({noMail: false});
-
+    if (!name || !email) return;
     this.props.handlerSubmit(this.state)
   }
 
@@ -45,12 +33,10 @@ export default class EditContactForm extends Component {
 
   render() {
     const {contact:{name, phone, email}, handlerCancel} = this.props;
-    const {noName, noMail} = this.state;
 
     return (
       <div className={classes.editContactForm}>
         <form onSubmit={e=>this.onSubmit(e)}>
-          <div>
             <Input
               id = 'name'
               type = 'text'
@@ -60,10 +46,9 @@ export default class EditContactForm extends Component {
               inputHandler = {this.inputNamelHandler}
               clearData = {this.clearName}
               value = {name}
+              validation = {['required']}
             />
-           { noName ? <p className={classes.errMeassage}>Name required</p> : null }
-          </div>
-          <div>
+
             <Input
               id = 'phone'
               type = 'tel'
@@ -74,8 +59,7 @@ export default class EditContactForm extends Component {
               clearData = {this.clearPhone}
               value = {phone}
             />            
-          </div>
-          <div>
+
             <Input
               id = 'email'
               type = 'email'
@@ -85,9 +69,8 @@ export default class EditContactForm extends Component {
               inputHandler = {this.inputEmailHandler}
               clearData = {this.clearEmail}
               value = {email}
+              validation = {['required', 'email']}
             />
-            { noMail ? <p className={classes.errMeassage}>Invalid email</p> : null }
-          </div>
 
           <div className={classes.butttons}>
             <Button

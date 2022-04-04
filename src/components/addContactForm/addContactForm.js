@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import classes from './addContactForm.module.scss';
 import Button from '../button';
 import Input from '../input';
-import is from 'is_js';
 
 export default class AddContactForm extends Component {
 
@@ -10,32 +9,13 @@ export default class AddContactForm extends Component {
     name: '',
     phone: '',
     email: '',
-    noName: false,
-    noMail: false,
-    bedMail: false,
   }
 
   onSubmit = (e) => {
     e.target.reset();
     e.preventDefault();
     const {name, email} = this.state;
-    if ( !name ) {
-      this.setState({noName: true});
-      return;
-    } else this.setState({noName: false});
-
-    if ( !email ) {
-      this.setState({noMail: true});
-      return;
-    }  else {
-      this.setState({noMail: false});
-    }
-
-    if (!is.email(email)) {
-      this.setState({bedMail: true});
-      return;
-    } else this.setState({bedMail: false});
-
+    if (!name || !email) return;
     this.props.handlerSubmit(this.state)
   }
 
@@ -48,12 +28,10 @@ export default class AddContactForm extends Component {
 
   render() {
     const {handlerCancel} = this.props;
-    const {noName, noMail, bedMail} = this.state;
 
     return (
       <div className={classes.addContactForm}>
         <form onSubmit={e=>this.onSubmit(e)}>
-          <div>
             <Input
               id = 'name'
               type = 'text'
@@ -62,10 +40,8 @@ export default class AddContactForm extends Component {
               arialabel = {'Name'}
               inputHandler = {this.inputNamelHandler}
               clearData = {this.clearName}
+              validation = {['required']}
             />
-           { noName ? <p className={classes.errMeassage}>Name required</p> : null }
-          </div>
-          <div>
             <Input
               id = 'phone'
               type = 'tel'
@@ -75,8 +51,6 @@ export default class AddContactForm extends Component {
               inputHandler = {this.inputPhoneHandler}
               clearData = {this.clearPhone}
             />            
-          </div>
-          <div>
             <Input
               id = 'email'
               type = 'email'
@@ -85,11 +59,8 @@ export default class AddContactForm extends Component {
               arialabel = {'Email'}
               inputHandler = {this.inputEmailHandler}
               clearData = {this.clearEmail}
+              validation = {['required', 'email']}
             />
-            { noMail ? <p className={classes.errMeassage}>Email required</p> : null }
-            { bedMail ? <p className={classes.errMeassage}>Invalid Email</p> : null }
-          </div>
-
           <div className={classes.butttons}>
             <Button
                 label = "Accept"

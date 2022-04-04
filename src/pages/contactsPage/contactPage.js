@@ -78,9 +78,7 @@ export default class ContactPage extends Component {
   updateContact = dataContact => {
     this.loading();
     this.clearForms();
-
     if (isNaN(dataContact.id)) {
-
       // ! This is a demo code to update added contacts without requesting the server.
       const cleanData = [...this.state.contacts];
       const contacts = cleanData.map(item => {
@@ -90,9 +88,7 @@ export default class ContactPage extends Component {
       this.setState({contacts, filtered: contacts});
       this.noLoading();
       // !
-
-    } else {
-      
+    } else {     
       // Working code
       this.service.updateContact(dataContact)  // TODO: Currently, the update contact on the server is fake.
         .then(contact => {
@@ -106,8 +102,7 @@ export default class ContactPage extends Component {
             this.noLoading();
           // ?
         })     
-      //
-       
+      //   
     }
   }
 
@@ -170,7 +165,6 @@ export default class ContactPage extends Component {
 
         { addForm
           ? <AddContactForm
-              // contact = {currentContact}
               handlerSubmit = {this.addContact}  
               handlerCancel = {this.clearForms}   
             />
