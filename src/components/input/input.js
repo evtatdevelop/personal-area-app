@@ -19,17 +19,21 @@ export default class Input extends Component {
   validation = (value) => {
     let valid = true;
     if ( this.props.validation ) { 
-      valid = this.props.validation.map(item => {
+      let res = null;
+      valid = this.props.validation.map(item => {       
+        if (is.boolean(res) && !res) return false;
         switch (item) {
           case 'required': 
-            this.setState({error: `${this.props.placeholder} required`})
-            return !!value;
-          case 'email': 
-          this.setState({error: `Invalid Email`})
-            return is.email(value);
+            res = !!value;
+            if (!res) this.setState({error: `${this.props.placeholder} required`});
+            return res;          
+          case 'email':
+            res = is.email(value);
+            if (!res) this.setState({error: `Invalid Email`});
+            return res;         
           default: return true; 
-        }
-      }).reduce((res, curr) => res && curr, true) 
+        }    
+      }).reduce((res, curr) => res && curr, true)
     }
     this.setState({valid});
     return valid;
@@ -38,8 +42,8 @@ export default class Input extends Component {
   onInputHandler = e => {
     const {value} = e.target;    
     this.setState({value: value});
-    const valid = this.validation(value);
-    this.props.inputHandler(value, valid);
+    if ( this.validation(value) ) this.props.inputHandler(value);
+    else this.props.inputHandler('');
   }
   
   onClrHandler = () => {

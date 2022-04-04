@@ -19,8 +19,8 @@ export default class EditContactForm extends Component {
   onSubmit = (e) => {
     e.target.reset();
     e.preventDefault();
-    const {name, email} = this.state;
-    if (!name || !email) return;
+    const {name} = this.state;
+    if (!name) return;
     this.props.handlerSubmit(this.state)
   }
 
@@ -69,7 +69,7 @@ export default class EditContactForm extends Component {
               inputHandler = {this.inputEmailHandler}
               clearData = {this.clearEmail}
               value = {email}
-              validation = {['required', 'email']}
+              validation = {['email']}
             />
 
           <div className={classes.butttons}>
@@ -83,7 +83,6 @@ export default class EditContactForm extends Component {
                 handlerClick={handlerCancel}
               />          
           </div>
-
         </form>
       </div>
     )    
