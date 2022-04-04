@@ -50,5 +50,18 @@ export default class Service {
   addContact = data => this.postResource(`${this._apiBase}users`, data);
 
 
+  // ! Test server response
+  auth = async (login, pass) => {
+    if (login !== 'tester@test.tst' || pass !== 'password' ) return false;
+    return {
+      email: login,
+      expiresIn: "3600",
+      idToken: "QWAS123456789QWAS",
+      // kind: "identitytoolkit#SinupNewUserResponse",
+      localId: "qwerty123456789",
+      refreshToken: "ASDFGH987654321"
+    } 
+  }
+
 
 }

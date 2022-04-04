@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import classes from './addContactForm.module.scss';
 import Button from '../button';
 import Input from '../input';
+import is from 'is_js';
 
 export default class AddContactForm extends Component {
 
@@ -11,6 +12,7 @@ export default class AddContactForm extends Component {
     email: '',
     noName: false,
     noMail: false,
+    bedMail: false,
   }
 
   onSubmit = (e) => {
@@ -25,7 +27,14 @@ export default class AddContactForm extends Component {
     if ( !email ) {
       this.setState({noMail: true});
       return;
-    } else this.setState({noMail: false});
+    }  else {
+      this.setState({noMail: false});
+    }
+
+    if (!is.email(email)) {
+      this.setState({bedMail: true});
+      return;
+    } else this.setState({bedMail: false});
 
     this.props.handlerSubmit(this.state)
   }
@@ -39,7 +48,7 @@ export default class AddContactForm extends Component {
 
   render() {
     const {handlerCancel} = this.props;
-    const {noName, noMail} = this.state;
+    const {noName, noMail, bedMail} = this.state;
 
     return (
       <div className={classes.addContactForm}>
@@ -77,7 +86,8 @@ export default class AddContactForm extends Component {
               inputHandler = {this.inputEmailHandler}
               clearData = {this.clearEmail}
             />
-            { noMail ? <p className={classes.errMeassage}>Invalid email</p> : null }
+            { noMail ? <p className={classes.errMeassage}>Email required</p> : null }
+            { bedMail ? <p className={classes.errMeassage}>Invalid Email</p> : null }
           </div>
 
           <div className={classes.butttons}>
