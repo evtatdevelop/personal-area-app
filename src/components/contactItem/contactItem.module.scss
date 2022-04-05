@@ -8,26 +8,33 @@
   padding: 10px;
   background-color: rgb(252, 246, 236);
   width: 85%;
+  min-height: 132px;
   // max-width: 300px;
-  .name {
-    font-weight: 700;
-    margin-bottom: 8px;
+
+  .info {
+    flex-grow: 1;
+
+    .name {
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    p {
+      margin-bottom: 4px;
+      span {
+        font-weight: 700;
+      }
+      a {
+        color: inherit;
+        &:hover,
+        &:active, 
+        &:focus {
+          color: rgb(1, 166, 221);
+        }
+      }
+    }    
   }
 
-  p {
-    margin-bottom: 4px;
-    span {
-      font-weight: 700;
-    }
-    a {
-      color: inherit;
-      &:hover,
-      &:active, 
-      &:focus {
-        color: rgb(1, 166, 221);
-      }
-    }
-  }
 
   .nav {
     display: flex;

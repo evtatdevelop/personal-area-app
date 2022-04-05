@@ -7,9 +7,11 @@ const ContactItem = props => {
   const {id, name, phone, email, handleClickEdit, handleClickDel} = props;
   return (
     <li className={classes.contactItem}>
-      <h2 className={classes.name}>{name}</h2>
-      <p className={classes.phone}><span>Pone: </span><a href={`tel:${phone}`}>{phone}</a></p>
-      <p className={classes.email}><span>Email: </span><a href={`mailto:${email}`}>{email}</a></p>
+      <div className={classes.info}>
+         <h2 className={classes.name}>{name}</h2>
+        {phone ? <p className={classes.phone}><span>Pone: </span><a href={`tel:${phone}`}>{phone}</a></p> : null}
+        {email ? <p className={classes.email}><span>Email: </span><a href={`mailto:${email}`}>{email}</a></p> : null}       
+      </div>
       <ul className={classes.nav}>
         <li><button type='button'
             className={classes.edit}
