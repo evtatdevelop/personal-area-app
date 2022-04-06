@@ -44,7 +44,7 @@ export default class Service {
   updateContact = data => this.updateResource(`${this._apiBase}contacts/${data.id}`, data);
   addContact = data => this.postResource(`${this._apiBase}contacts`, data);
 
-
+  
   // ! Test server response
   auth = async (login, pass) => {
     if (login !== 'tester@test.tst' || pass !== 'password' ) return false;

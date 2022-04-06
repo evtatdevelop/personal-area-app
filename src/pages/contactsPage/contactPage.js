@@ -4,7 +4,6 @@ import ContactList from '../../components/contactList';
 import SearchContact from '../../components/searchContact';
 import Service from '../../services';
 import Spinner from '../../components/spinner';
-import Error from '../../components/Error';
 import DelContactForm from '../../components/delContactForm';
 import AddContactForm from '../../components/addContactForm';
 import EditContactForm from '../../components/editContactForm';
@@ -13,7 +12,6 @@ export default class ContactPage extends Component {
   state = {
     contacts: [],
     loading: false,
-    error: false,
     filtered: [],
     currentContact: {},
     delForm: false,
@@ -23,13 +21,9 @@ export default class ContactPage extends Component {
 
   service = new Service();
 
-  componentDidCatch() {
-    this.setState({error: true})
-  }
-
-  componentDidMount() {
-    this.getContacts();
-  }
+  // componentDidMount() {
+  //   this.getContacts();
+  // }
 
   loading = () => this.setState({loading: true})
   noLoading = () => this.setState({loading: false})
@@ -91,9 +85,7 @@ export default class ContactPage extends Component {
   
 
   render() {
-    const {filtered, loading, error, currentContact, delForm, addForm, editForm} = this.state;
-
-    if (error) return <Error/>;
+    const {filtered, loading, currentContact, delForm, addForm, editForm} = this.state;
 
     const search = (
       <SearchContact
@@ -101,15 +93,7 @@ export default class ContactPage extends Component {
         clearData = {this.clearFilter}
       />
     );
-    const contacts = (  
-      <ContactList
-          contacts = {filtered}
-          handleClickEdit = {this.handleClickEdit}
-          handleClickDel = {this.handleClickDel}
-          newContact = {this.handleClickAdd}
-      />
-    );
-    
+      
     return(
       <div className={classes.contacts}>
 
@@ -141,7 +125,12 @@ export default class ContactPage extends Component {
 
         { loading ? <Spinner/> : search }
 
-        {contacts}
+        <ContactList
+          contacts = {filtered}
+          handleClickEdit = {this.handleClickEdit}
+          handleClickDel = {this.handleClickDel}
+          newContact = {this.handleClickAdd}
+        />
 
       </div>
     )

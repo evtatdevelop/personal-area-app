@@ -8,7 +8,7 @@ const ContactItem = props => {
   return (
     <li className={classes.contactItem}>
       <div className={classes.info}>
-         <h2 className={classes.name}>{name}</h2>
+        <h2 className={classes.name}>{name}</h2>
         {phone ? <p className={classes.phone}><span>Pone: </span><a href={`tel:${phone}`}>{phone}</a></p> : null}
         {email ? <p className={classes.email}><span>Email: </span><a href={`mailto:${email}`}>{email}</a></p> : null}       
       </div>
