@@ -1,0 +1,22 @@
+{
+  "contacts": [
+    {
+      "id": 5,
+      "name": "Chelsey Dietrich",
+      "email": "Karley_Dach@jasper.info",
+      "phone": "(254)954-12890"
+    },
+    {
+      "name": "EVGENIY TATARENKO",
+      "phone": "23232323",
+      "email": "tatarenkoe@gmail.com",
+      "id": 6
+    },
+    {
+      "name": "Svetlana Ivanova",
+      "phone": "89234912612",
+      "email": "evtatdevelop@gmail.com",
+      "id": 7
+    }
+  ]
+}

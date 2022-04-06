@@ -1,6 +1,7 @@
 export default class Service {
   constructor() {
-    this._apiBase = 'https://jsonplaceholder.typicode.com/';
+    // this._apiBase = 'https://jsonplaceholder.typicode.com/';
+    this._apiBase = 'http://localhost:3000/';
   }
 
   getResource = async (url) => {
@@ -21,7 +22,7 @@ export default class Service {
 
   updateResource = async (url, data) => {
     const res = await fetch(url, {
-      method: 'PUT',
+      method: 'PATCH',
       body: JSON.stringify(data),
       headers: {'Content-Type': 'application/json;charset=utf-8'}
     });
@@ -38,16 +39,10 @@ export default class Service {
   }
 
 
-  getContacts = () => this.getResource(`${this._apiBase}users`);
-
-  // TODO: Currently, the delete result on the server is fake.
-  delContact = id => this.deleteResource(`${this._apiBase}users/id`); 
-  
-  // TODO: Currently, the update contact on the server is fake.
-  updateContact = data => this.updateResource(`${this._apiBase}users/${data.id}`, data);
-
-  // TODO: Currently, the post contact on the server is fake.
-  addContact = data => this.postResource(`${this._apiBase}users`, data);
+  getContacts = () => this.getResource(`${this._apiBase}contacts`);
+  delContact = id => this.deleteResource(`${this._apiBase}contacts/${id}`); 
+  updateContact = data => this.updateResource(`${this._apiBase}contacts/${data.id}`, data);
+  addContact = data => this.postResource(`${this._apiBase}contacts`, data);
 
 
   // ! Test server response

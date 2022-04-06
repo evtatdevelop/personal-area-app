@@ -49,66 +49,25 @@ export default class ContactPage extends Component {
   delContact = (id) => {
     this.loading();
     this.clearForms();
-    this.service.delContact(id) // TODO: Currently, the delete result on the server is fake.
-    .then(() => { 
-      // ? The state is renewed to simulate real work. In production, the getContacts function must be executed.
-      const cleanData = [...this.state.contacts];
-      const contacts = cleanData.filter(item => item.id !== id)
-      this.setState({contacts, filtered: contacts});
-      this.noLoading();
-      // ?
-    })
+    this.service.delContact(id)
+    .then( () => this.getContacts() )
   } 
 
   addContact = dataContact => {
     this.loading();
     this.clearForms();
-    this.service.addContact(dataContact)  // TODO: Currently, the post contact on the server is fake.
-    .then(contact => {
-      // ? The state is renewed to simulate real work. In production, the getContacts function must be executed.
-        contact.id = Date.now().toString(32);
-        const contacts = [...this.state.contacts];
-        contacts.unshift(contact)
-        this.setState({contacts, filtered: contacts});
-        this.noLoading();
-      // ?
-    })
+    this.service.addContact(dataContact)
+    .then( () => this.getContacts() )
   }
 
   updateContact = dataContact => {
     this.loading();
-    this.clearForms();
-    if (isNaN(dataContact.id)) {
-      // ! This is a demo code to update added contacts without requesting the server.
-      const cleanData = [...this.state.contacts];
-      const contacts = cleanData.map(item => {
-        if (item.id !== dataContact.id) return item;
-        return dataContact;
-      })
-      this.setState({contacts, filtered: contacts});
-      this.noLoading();
-      // !
-    } else {     
-      // Working code
-      this.service.updateContact(dataContact)  // TODO: Currently, the update contact on the server is fake.
-        .then(contact => {
-          // ? The state is renewed to simulate real work. In production, the getContacts function must be executed.
-            const cleanData = [...this.state.contacts];
-            const contacts = cleanData.map(item => {
-              if (item.id !== contact.id) return item;
-              return contact;
-            })
-            this.setState({contacts, filtered: contacts});
-            this.noLoading();
-          // ?
-        })     
-      //   
-    }
+    this.clearForms();     
+    this.service.updateContact(dataContact)
+    .then( () => this.getContacts() )
   }
 
-  handleClickAdd = () => {
-    this.setState({addForm: true});
-  };
+  handleClickAdd = () => this.setState({addForm: true})
 
   handleClickEdit = id => {
     const currentContact = this.getContactById(id);
