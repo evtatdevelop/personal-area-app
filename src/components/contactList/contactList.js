@@ -5,8 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons'
 import { connect } from 'react-redux';
 import WithService from '../hoc';
-import { contactsLoaded } from '../../actions'
-
+import { contactsLoaded, addForm } from '../../actions'
 
 class ContactList extends Component {
  
@@ -19,23 +18,22 @@ class ContactList extends Component {
   }
  
   render() {
-    const {contacts, handleClickEdit, handleClickDel, newContact} = this.props;
+    const {filtered, addForm} = this.props;
 
     return (
       <ul className={classes.contactList}>
         <button type="button" 
           className = {classes.addButton}
-          onClick = {newContact}
+          onClick = {addForm}
         ><FontAwesomeIcon icon={faCirclePlus} /></button>
-        {contacts.map(item => 
+        
+        {filtered.map(item => 
           <ContactItem
             key = {item.id}
             id = {item.id}
             name = {item.name}
             phone = {item.phone}
             email = {item.email}
-            handleClickEdit = {handleClickEdit}
-            handleClickDel = {handleClickDel}
           />
         )}
       </ul>
@@ -45,19 +43,14 @@ class ContactList extends Component {
 
  const mapStateToProps = (state) => {
    return {
-     contacts: state.contacts
+     contacts: state.contacts,
+     filtered: state.filtered
    }
  }
 
-//  const mapDispatchToProps = (dispatch) => {
-//    return {
-//     contactsLoaded: (contacts) => {
-//       dispatch(contactsLoaded(contacts))
-//     }
-//    }
-//  }
  const mapDispatchToProps = {
-  contactsLoaded
+  contactsLoaded,
+  addForm
  }
 
  export default WithService()(connect(mapStateToProps, mapDispatchToProps)(ContactList));

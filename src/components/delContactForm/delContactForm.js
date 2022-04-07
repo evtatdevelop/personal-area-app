@@ -1,35 +1,63 @@
+import {Component} from 'react'
 import classes from './delContactForm.module.scss';
 import Button from '../button';
+import { connect } from 'react-redux';
+import WithService from '../hoc/withService';
+import { formsClean, contactsLoaded, delContact } from '../../actions';
 
-const DelContactForm = props => {
-  const {contact: {id, name, phone, email, }, handlerCancel, handlerSubmit} = props;
-  return (
-    <div className={classes.delContactForm}>
-      <form onSubmit={e=>onSubmit(e, ()=>handlerSubmit(id))}>
-        <h2 className={classes.name}>{name}</h2>
-        <p className={classes.phone}><span>Pone: </span><a href={`tel:${phone}`}>{phone}</a></p>
-        <p className={classes.email}><span>Email: </span><a href={`mailto:${email}`}>{email}</a></p>
-        <div className={classes.butttons}>
-          <Button
-              label = "Delete"
-              type = "submit"
-            />
-          <Button
-              label = "Cancel"
-              type = "button"
-              handlerClick={handlerCancel}
-            />          
-        </div>
+class DelContactForm extends Component {
 
-      </form>
-    </div>
-  )
+  onSubmit = (e, id) => {
+    e.preventDefault();
+    const {Service, delContact, contactsLoaded} = this.props;
+    Service.delete(id)
+    .then(() =>{
+      delContact();
+      Service.getContacts()
+      .then(contacts => {
+        contactsLoaded(contacts)
+      })
+
+    })
+  }
+
+  render() {
+    const { contact: {id, name, phone, email, }, formsClean} = this.props;
+  
+    return (
+      <div className={classes.delContactForm}>
+        <form onSubmit={e=>this.onSubmit(e, id)}>
+          <h2 className={classes.name}>{name}</h2>
+          <p className={classes.phone}><span>Pone: </span><a href={`tel:${phone}`}>{phone}</a></p>
+          <p className={classes.email}><span>Email: </span><a href={`mailto:${email}`}>{email}</a></p>
+          <div className={classes.butttons}>
+            <Button
+                label = "Delete"
+                type = "submit"
+              />
+            <Button
+                label = "Cancel"
+                type = "button"
+                handlerClick={formsClean}
+              />          
+          </div>
+        </form>
+      </div>
+    )
+  }
 }
 
-const onSubmit = (e, handlerSubmit) => {
-  e.target.reset();
-  e.preventDefault();
-  handlerSubmit();
+
+const mapStateToProps = (state) => {
+  return {
+    contact: state.currentContact
+  }
 }
 
-export default DelContactForm;
+const mapDispatchToProps = {
+  formsClean,
+  contactsLoaded,
+  delContact
+}
+
+export default WithService()(connect(mapStateToProps, mapDispatchToProps)(DelContactForm));

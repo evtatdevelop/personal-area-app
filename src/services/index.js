@@ -40,9 +40,9 @@ export default class Service {
 
 
   getContacts = () => this.getResource(`${this._apiBase}contacts`);
-  delContact = id => this.deleteResource(`${this._apiBase}contacts/${id}`); 
-  updateContact = data => this.updateResource(`${this._apiBase}contacts/${data.id}`, data);
-  addContact = data => this.postResource(`${this._apiBase}contacts`, data);
+  delete = id => this.deleteResource(`${this._apiBase}contacts/${id}`); 
+  update = data => this.updateResource(`${this._apiBase}contacts/${data.id}`, data);
+  add = data => this.postResource(`${this._apiBase}contacts`, data);
 
   
   // ! Test server response

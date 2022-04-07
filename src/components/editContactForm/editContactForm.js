@@ -2,8 +2,11 @@ import React, {Component} from 'react'
 import classes from './editContactForm.module.scss';
 import Button from '../button';
 import Input from '../input';
+import { connect } from 'react-redux';
+import WithService from '../hoc/withService';
+import { formsClean, contactsLoaded, editContact } from '../../actions';
 
-export default class EditContactForm extends Component {
+class EditContactForm extends Component {
 
   state = {
     id: null,
@@ -12,16 +15,21 @@ export default class EditContactForm extends Component {
   }
 
   componentDidMount() {
-    const {contact:{id, name, phone, email}} = this.props;
-    this.setState({id, name, phone, email})
+    this.setState({...this.props.contact})
   }
 
   onSubmit = (e) => {
-    e.target.reset();
     e.preventDefault();
-    const {name} = this.state;
-    if (!name) return;
-    this.props.handlerSubmit(this.state)
+    if (!this.state.name) return;
+    const {Service, editContact, contactsLoaded} = this.props;
+    Service.update(this.state)
+    .then(() =>{
+      editContact();
+      Service.getContacts()
+      .then(contacts => {
+        contactsLoaded(contacts)
+      })
+    })
   }
 
   inputNamelHandler = name => this.setState({name});
@@ -32,7 +40,7 @@ export default class EditContactForm extends Component {
   clearEmail = () => this.setState({email: ''});
 
   render() {
-    const {contact:{name, phone, email}, handlerCancel} = this.props;
+    const {contact:{name, phone, email}, formsClean} = this.props;
 
     return (
       <div className={classes.editContactForm}>
@@ -80,7 +88,7 @@ export default class EditContactForm extends Component {
             <Button
                 label = "Cancel"
                 type = "button"
-                handlerClick={handlerCancel}
+                handlerClick={formsClean}
               />          
           </div>
         </form>
@@ -89,3 +97,17 @@ export default class EditContactForm extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    contact: state.currentContact
+  }
+}
+
+const mapDispatchToProps = {
+  formsClean,
+  contactsLoaded,
+  editContact
+}
+
+export default WithService()(connect(mapStateToProps, mapDispatchToProps)(EditContactForm));

@@ -1,10 +1,12 @@
 import classes from './contactItem.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPenToSquare } from '@fortawesome/free-solid-svg-icons'
-import { faTrashCan } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPenToSquare } from '@fortawesome/free-solid-svg-icons';
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { connect } from 'react-redux';
+import { delForm, editForm } from '../../actions';
 
 const ContactItem = props => {  
-  const {id, name, phone, email, handleClickEdit, handleClickDel} = props;
+  const {id, name, phone, email, delForm, editForm} = props;
   return (
     <li className={classes.contactItem}>
       <div className={classes.info}>
@@ -15,15 +17,23 @@ const ContactItem = props => {
       <ul className={classes.nav}>
         <li><button type='button'
             className={classes.edit}
-            onClick={()=>handleClickEdit(id)}
+            onClick={()=>editForm(id)}
           ><FontAwesomeIcon icon={faPenToSquare} /></button></li>
+        
         <li><button type='button' 
             className={classes.delete}
-            onClick={()=>handleClickDel(id)}
+            onClick={()=>delForm(id)}
           ><FontAwesomeIcon icon={faTrashCan} /></button></li>
       </ul>
     </li>
   )
 }
 
-export default ContactItem;
+const mapStateToProps = () => ({})
+
+const mapDispatchToProps = {
+  delForm,
+  editForm
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactItem);

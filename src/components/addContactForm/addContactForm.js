@@ -2,8 +2,11 @@ import React, {Component} from 'react'
 import classes from './addContactForm.module.scss';
 import Button from '../button';
 import Input from '../input';
+import { connect } from 'react-redux';
+import WithService from '../hoc/withService';
+import { formsClean, contactsLoaded, addContact } from '../../actions';
 
-export default class AddContactForm extends Component {
+class AddContactForm extends Component {
 
   state = {
     name: '',
@@ -12,12 +15,19 @@ export default class AddContactForm extends Component {
   }
 
   onSubmit = (e) => {
-    e.target.reset();
     e.preventDefault();
-    const {name} = this.state;
-    if (!name) return;
-    this.props.handlerSubmit(this.state)
+    if (!this.state.name) return;
+    const {Service, addContact, contactsLoaded} = this.props;
+    Service.add(this.state)
+    .then(() =>{
+      addContact();
+      Service.getContacts()
+      .then(contacts => {
+        contactsLoaded(contacts)
+      })
+    })
   }
+
 
   inputNamelHandler = name => this.setState({name});
   inputPhoneHandler = phone => this.setState({phone});
@@ -27,7 +37,7 @@ export default class AddContactForm extends Component {
   clearEmail = () => this.setState({email: ''});
 
   render() {
-    const {handlerCancel} = this.props;
+    const {formsClean} = this.props;
 
     return (
       <div className={classes.addContactForm}>
@@ -70,7 +80,7 @@ export default class AddContactForm extends Component {
             <Button
                 label = "Cancel"
                 type = "button"
-                handlerClick={handlerCancel}
+                handlerClick={formsClean}
               />          
           </div>
         </form>
@@ -79,3 +89,17 @@ export default class AddContactForm extends Component {
   }
 
 }
+
+const mapStateToProps = (state) => {
+  return {
+    
+  }
+}
+
+const mapDispatchToProps = {
+  formsClean,
+  contactsLoaded,
+  addContact
+}
+
+export default WithService()(connect(mapStateToProps, mapDispatchToProps)(AddContactForm));
