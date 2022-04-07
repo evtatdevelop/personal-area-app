@@ -6,6 +6,7 @@ const initialState = {
   editForm: false,
   addForm: false,
   loading: false,
+  idToken: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -88,7 +89,14 @@ const reducer = (state = initialState, action) => {
     case 'LOGIN':
       return {
         ...state,
+        idToken: action.payload,
         loading: false
+      };
+
+    case 'LOGOUT':
+      return {
+        ...state,
+        idToken: null,
       };
   
     default:

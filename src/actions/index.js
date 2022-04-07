@@ -20,7 +20,14 @@ const addContact = () => ({type: 'ADD_CONTACT'})
 
 const loadingOn = () => ({type: 'LOADING'})
 
-const login = () => ({type: 'LOGIN'})
+const login = (idToken) => ({type: 'LOGIN', payload: idToken})
+
+const logout = () => {
+  localStorage.removeItem('idToken')
+  localStorage.removeItem('localId')
+  localStorage.removeItem('expDate')
+  return {type: 'LOGOUT'}
+}
 
 export {
   contactsLoaded,
@@ -34,5 +41,6 @@ export {
   editContact,
   addContact,
   loadingOn,
-  login
+  login,
+  logout
 }

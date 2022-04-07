@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
+import { Navigate } from 'react-router-dom'
 import classes from './loginPage.module.scss';
 import Input from '../../components/input';
 import Button from '../../components/button';
 import Spinner from '../../components/spinner';
 import { connect } from 'react-redux';
 import WithService from '../../components/hoc';
-import { loadingOn, login } from '../../actions';
+import { loadingOn, login, logout } from '../../actions';
 
 class LoginPage extends Component {
   
@@ -13,14 +14,25 @@ class LoginPage extends Component {
   passInp = React.createRef();
   state = { mail: '', pass: '', }
 
-   auth = ({mail, pass}) => {
+  // componentDidMount() {
+  //   this.props.logout();
+  // }
+
+  auth = ({mail, pass}) => {
     const {Service, login} = this.props;
     Service.auth(mail, pass) 
     .then((response) => {
-      console.log(response);
-      login();
+      const expDate = new Date(new Date().getTime() + response.expiresIn * 1000)
+      localStorage.setItem('idToken', response.idToken)
+      localStorage.setItem('localId', response.localId)
+      localStorage.setItem('expDate', expDate)
+      login(response.idToken);
     })
   } 
+
+  autoLogaut = time => {
+    setTimeout(() => logout(), time * 1000)
+  }
 
   inputMailHandler = mail => this.setState({mail});
   inputPassHandler = pass => this.setState({pass});
@@ -38,9 +50,9 @@ class LoginPage extends Component {
   };
 
   render() {
-    const { loading } = this.props;
-
-    return(
+    const { loading, idToken } = this.props;
+    
+    const form = (
       <form 
         className={classes.form} 
         onSubmit={this.onSubmit}
@@ -74,20 +86,29 @@ class LoginPage extends Component {
 
         { loading ? <Spinner/> : null }
       </form>
-      
+    )
+
+    return(
+      <>
+      {idToken ? <Navigate to={'/contacts'}/> : form}
+      </>
+
+           
     )
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    loading: state.loading
+    loading: state.loading,
+    idToken: state.idToken
   }
 }
 
 const mapDispatchToProps = {
   loadingOn,
-  login
+  login,
+  logout
 }
 
 export default WithService()(connect(mapStateToProps, mapDispatchToProps)(LoginPage));

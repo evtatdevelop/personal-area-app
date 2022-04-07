@@ -3,7 +3,7 @@
     "email": "tester@test.tst",
     "expiresIn": "3600",
     "idToken": "QWAS123456789QWAS",
-    "kind": "identitytoolkit#SinupNewUserResponse",
+    "kind": "identitytoolkit#VerifPasswordyResponse",
     "localId": "qwerty123456789",
     "refreshToken": "ASDFGH987654321"
   },
