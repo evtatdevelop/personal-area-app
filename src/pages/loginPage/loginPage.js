@@ -2,33 +2,23 @@ import React, {Component} from 'react'
 import classes from './loginPage.module.scss';
 import Input from '../../components/input';
 import Button from '../../components/button';
-import Service from '../../services';
 import Spinner from '../../components/spinner';
-import Error from '../../components/Error';
-export default class LoginPage extends Component {
+import { connect } from 'react-redux';
+import WithService from '../../components/hoc';
+import { loadingOn, login } from '../../actions';
+
+class LoginPage extends Component {
   
   mailInp = React.createRef();
   passInp = React.createRef();
+  state = { mail: '', pass: '', }
 
-  state = {
-    mail: '',
-    pass: '',
-    loading: false,
-    error: false,
-  }
-  
-  service = new Service();
-
-  loading = () => this.setState({loading: true})
-  noLoading = () => this.setState({loading: false})
-
-  auth = () => {
-    this.loading();
-    const {mail, pass} = this.state;
-    this.service.auth(mail, pass) 
+   auth = ({mail, pass}) => {
+    const {Service, login} = this.props;
+    Service.auth(mail, pass) 
     .then((response) => {
       console.log(response);
-      this.noLoading();
+      login();
     })
   } 
 
@@ -38,11 +28,9 @@ export default class LoginPage extends Component {
   clearPass = () => this.setState({pass: ''});
 
   onSubmit = e => {
-    e.target.reset();
     e.preventDefault();
-
-    this.auth();
-
+    this.props.loadingOn();
+    this.auth(this.state);
     this.clearMail();
     this.clearPass();
     this.mailInp.current.onClrHandler();
@@ -50,8 +38,7 @@ export default class LoginPage extends Component {
   };
 
   render() {
-
-    if (this.state.error) return <Error/>;
+    const { loading } = this.props;
 
     return(
       <form 
@@ -85,9 +72,22 @@ export default class LoginPage extends Component {
           type = "submit"
         />
 
-        { this.state.loading ? <Spinner/> : null }
+        { loading ? <Spinner/> : null }
       </form>
       
     )
   }
 }
+
+const mapStateToProps = (state) => {
+  return {
+    loading: state.loading
+  }
+}
+
+const mapDispatchToProps = {
+  loadingOn,
+  login
+}
+
+export default WithService()(connect(mapStateToProps, mapDispatchToProps)(LoginPage));

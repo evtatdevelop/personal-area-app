@@ -3,14 +3,14 @@ import classes from './delContactForm.module.scss';
 import Button from '../button';
 import { connect } from 'react-redux';
 import WithService from '../hoc/withService';
-import { formsClean, contactsLoaded, delContact, loading } from '../../actions';
+import { formsClean, contactsLoaded, delContact, loadingOn } from '../../actions';
 
 class DelContactForm extends Component {
 
   onSubmit = (e, id) => {
     e.preventDefault();
-    const {Service, delContact, contactsLoaded, loading} = this.props;
-    loading();
+    const {Service, delContact, contactsLoaded, loadingOn} = this.props;
+    loadingOn();
     Service.delete(id)
     .then(() =>{
       delContact();
@@ -59,7 +59,7 @@ const mapDispatchToProps = {
   formsClean,
   contactsLoaded,
   delContact,
-  loading
+  loadingOn
 }
 
 export default WithService()(connect(mapStateToProps, mapDispatchToProps)(DelContactForm));

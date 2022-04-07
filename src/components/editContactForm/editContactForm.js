@@ -4,7 +4,7 @@ import Button from '../button';
 import Input from '../input';
 import { connect } from 'react-redux';
 import WithService from '../hoc/withService';
-import { formsClean, contactsLoaded, editContact, loading } from '../../actions';
+import { formsClean, contactsLoaded, editContact, loadingOn } from '../../actions';
 
 class EditContactForm extends Component {
 
@@ -21,8 +21,8 @@ class EditContactForm extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     if (!this.state.name) return;
-    const {Service, editContact, contactsLoaded, loading} = this.props;
-    loading()
+    const {Service, editContact, contactsLoaded, loadingOn} = this.props;
+    loadingOn()
     Service.update(this.state)
     .then(() =>{
       editContact();
@@ -109,7 +109,7 @@ const mapDispatchToProps = {
   formsClean,
   contactsLoaded,
   editContact,
-  loading
+  loadingOn
 }
 
 export default WithService()(connect(mapStateToProps, mapDispatchToProps)(EditContactForm));

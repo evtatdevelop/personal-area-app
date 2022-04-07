@@ -38,25 +38,15 @@ export default class Service {
     return await res.json(); 
   }
 
-
   getContacts = () => this.getResource(`${this._apiBase}contacts`);
   delete = id => this.deleteResource(`${this._apiBase}contacts/${id}`); 
   update = data => this.updateResource(`${this._apiBase}contacts/${data.id}`, data);
   add = data => this.postResource(`${this._apiBase}contacts`, data);
-
   
-  // ! Test server response
+  
   auth = async (login, pass) => {
-    if (login !== 'tester@test.tst' || pass !== 'password' ) return false;
-    return {
-      email: login,
-      expiresIn: "3600",
-      idToken: "QWAS123456789QWAS",
-      // kind: "identitytoolkit#SinupNewUserResponse",
-      localId: "qwerty123456789",
-      refreshToken: "ASDFGH987654321"
-    } 
+    if (login !== 'tester@test.tst' || pass !== 'password' ) return false; // ! Checking authorization on the server
+    return this.getResource(`${this._apiBase}auth`)
   }
-
 
 }

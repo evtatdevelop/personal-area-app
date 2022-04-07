@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { delForm, editForm } from '../../actions';
 
 const ContactItem = props => {  
-  const {id, name, phone, email, delForm, editForm} = props;
+  const {data: {id, name, phone, email}, delForm, editForm} = props;
   return (
     <li className={classes.contactItem}>
       <div className={classes.info}>
@@ -18,12 +18,12 @@ const ContactItem = props => {
         <li><button type='button'
             className={classes.edit}
             onClick={()=>editForm(id)}
-          ><FontAwesomeIcon icon={faPenToSquare} /></button></li>
+          ><FontAwesomeIcon icon={faPenToSquare}/></button></li>
         
         <li><button type='button' 
             className={classes.delete}
             onClick={()=>delForm(id)}
-          ><FontAwesomeIcon icon={faTrashCan} /></button></li>
+          ><FontAwesomeIcon icon={faTrashCan}/></button></li>
       </ul>
     </li>
   )

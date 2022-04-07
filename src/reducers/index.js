@@ -84,6 +84,12 @@ const reducer = (state = initialState, action) => {
         ...state,
         loading: true
       };
+
+    case 'LOGIN':
+      return {
+        ...state,
+        loading: false
+      };
   
     default:
       return state;
