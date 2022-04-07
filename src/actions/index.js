@@ -59,6 +59,11 @@ const addContact = () => {
     type: 'ADD_CONTACT'
   }
 }
+const loading = () => {
+  return {
+    type: 'LOADING'
+  }
+}
 
 export {
   contactsLoaded,
@@ -70,5 +75,6 @@ export {
   formsClean,
   delContact,
   editContact,
-  addContact
+  addContact,
+  loading
 }

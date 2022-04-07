@@ -5,6 +5,7 @@ const initialState = {
   delForm: false,
   editForm: false,
   addForm: false,
+  loading: false,
 }
 
 const reducer = (state = initialState, action) => {
@@ -13,7 +14,8 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         contacts: action.payload,
-        filtered: action.payload
+        filtered: action.payload,
+        loading: false
       };
 
     case 'CONTACTS_FILTRED':
@@ -75,6 +77,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         addForm: false
+      };
+
+    case 'LOADING':
+      return {
+        ...state,
+        loading: true
       };
   
     default:

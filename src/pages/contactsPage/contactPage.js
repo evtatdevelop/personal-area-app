@@ -2,29 +2,16 @@ import React, {Component} from 'react'
 import classes from './contactPage.module.scss';
 import ContactList from '../../components/contactList';
 import SearchContact from '../../components/searchContact';
-import Service from '../../services';
 import Spinner from '../../components/spinner';
 import DelContactForm from '../../components/delContactForm';
 import AddContactForm from '../../components/addContactForm';
 import EditContactForm from '../../components/editContactForm';
 import { connect } from 'react-redux';
-import WithService from '../../components/hoc';
-import {  } from '../../actions';
 
 class ContactPage extends Component {
 
-  state = {
-    loading: false,
-  }
-
-  service = new Service();
-
-  loading = () => this.setState({loading: true})
-  noLoading = () => this.setState({loading: false})
-  
   render() {
-    const {loading} = this.state;
-    const {delForm, addForm, editForm} = this.props;
+    const {delForm, addForm, editForm, loading} = this.props;
       
     return(
       <div className={classes.contacts}>
@@ -35,7 +22,8 @@ class ContactPage extends Component {
 
         { addForm ? <AddContactForm/> : null }
 
-        { loading ? <Spinner/> : <SearchContact/> }
+        { loading ? <Spinner/> : null }
+        { loading ? <div style={{height: "55px"}}></div> : <SearchContact/> }
 
         <ContactList />
 
@@ -48,10 +36,11 @@ const mapStateToProps = (state) => {
   return {
     delForm: state.delForm,
     editForm: state.editForm,
-    addForm: state.addForm
+    addForm: state.addForm,
+    loading: state.loading
   }
 }
 
 const mapDispatchToProps = {}
 
-export default WithService()(connect(mapStateToProps, mapDispatchToProps)(ContactPage));
+export default connect(mapStateToProps, mapDispatchToProps)(ContactPage);

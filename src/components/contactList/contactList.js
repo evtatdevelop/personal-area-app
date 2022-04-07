@@ -5,15 +5,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCirclePlus } from '@fortawesome/free-solid-svg-icons'
 import { connect } from 'react-redux';
 import WithService from '../hoc';
-import { contactsLoaded, addForm } from '../../actions'
+import { contactsLoaded, addForm, loading } from '../../actions'
 
 class ContactList extends Component {
  
   componentDidMount() {
-    const {Service} = this.props;
+    const {Service, loading, contactsLoaded} = this.props;
+    loading();
     Service.getContacts()
     .then(contacts => {
-      this.props.contactsLoaded(contacts)
+      contactsLoaded(contacts)
     })
   }
  
@@ -50,7 +51,8 @@ class ContactList extends Component {
 
  const mapDispatchToProps = {
   contactsLoaded,
-  addForm
+  addForm,
+  loading
  }
 
  export default WithService()(connect(mapStateToProps, mapDispatchToProps)(ContactList));
