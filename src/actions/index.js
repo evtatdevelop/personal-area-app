@@ -20,11 +20,30 @@ const addContact = () => ({type: 'ADD_CONTACT'})
 
 const loadingOn = () => ({type: 'LOADING'})
 
-const login = (idToken) => ({type: 'LOGIN', payload: idToken})
+const login = ({idToken, expiresIn}) => {
+  const expDate = new Date(new Date().getTime() + expiresIn * 1000)
+  localStorage.setItem('idToken', idToken)
+  localStorage.setItem('expDate', expDate)
+  return {type: 'LOGIN', payload: idToken}
+}
+
+const autoLogin = () => {
+  const idToken = localStorage.getItem('idToken');
+  if ( !idToken ) return {type: 'LOGOUT'}
+  else {
+    const expDate = new Date(localStorage.getItem('expDate'))
+    if ( expDate <= new Date() ) return {type: 'LOGOUT'}
+    else {
+      const expiresIn = (expDate.getTime() - new Date().getTime()) / 1000;
+      localStorage.setItem('idToken', idToken)
+      localStorage.setItem('expDate', expiresIn)
+      return {type: 'LOGIN', payload: idToken}
+    }
+  }  
+}
 
 const logout = () => {
   localStorage.removeItem('idToken')
-  localStorage.removeItem('localId')
   localStorage.removeItem('expDate')
   return {type: 'LOGOUT'}
 }
@@ -42,5 +61,6 @@ export {
   addContact,
   loadingOn,
   login,
-  logout
+  logout,
+  autoLogin
 }

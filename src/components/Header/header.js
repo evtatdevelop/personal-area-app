@@ -12,8 +12,8 @@ const Header = props => {
         <nav className={classes.headerNav}>
         {idToken
           ? <ul>
-              <li><Link to='/contacts'>Contacts</Link></li>
-              <li><Link to='/logaut'>Logaot</Link></li>
+              {/* <li><Link to='/contacts'>Contacts</Link></li> */}
+              <li><Link to='/logout'>Logout</Link></li>
             </ul>
           : null
         }

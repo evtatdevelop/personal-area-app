@@ -90,7 +90,6 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         idToken: action.payload,
-        loading: false
       };
 
     case 'LOGOUT':

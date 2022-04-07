@@ -5,7 +5,7 @@ import LoginPage from './pages/loginPage';
 import ContactPage from './pages/contactsPage';
 import { Routes, Route } from "react-router-dom";
 import { connect } from 'react-redux';
-import Logaut from './components/logaut';
+import Logout from './pages/logout';
 
 const App = props => {
   return (
@@ -14,7 +14,7 @@ const App = props => {
       <Routes>
         <Route path='/' element={<LoginPage />} />
         {props.idToken ? <Route path='/contacts' element={<ContactPage />} /> : null}
-        {props.idToken ? <Route path='/logaut' element={<Logaut/>} /> : null}
+        {props.idToken ? <Route path='/logout' element={<Logout/>} /> : null}
       </Routes>
     </div>
   );

@@ -6,7 +6,7 @@ import Button from '../../components/button';
 import Spinner from '../../components/spinner';
 import { connect } from 'react-redux';
 import WithService from '../../components/hoc';
-import { loadingOn, login, logout } from '../../actions';
+import { loadingOn, login, autoLogin } from '../../actions';
 
 class LoginPage extends Component {
   
@@ -14,25 +14,18 @@ class LoginPage extends Component {
   passInp = React.createRef();
   state = { mail: '', pass: '', }
 
-  // componentDidMount() {
-  //   this.props.logout();
-  // }
+  componentDidMount() {
+    this.props.autoLogin()
+  }
 
   auth = ({mail, pass}) => {
-    const {Service, login} = this.props;
+    const {Service, login, loadingOn} = this.props;
+    loadingOn();
     Service.auth(mail, pass) 
     .then((response) => {
-      const expDate = new Date(new Date().getTime() + response.expiresIn * 1000)
-      localStorage.setItem('idToken', response.idToken)
-      localStorage.setItem('localId', response.localId)
-      localStorage.setItem('expDate', expDate)
-      login(response.idToken);
+      login(response);
     })
   } 
-
-  autoLogaut = time => {
-    setTimeout(() => logout(), time * 1000)
-  }
 
   inputMailHandler = mail => this.setState({mail});
   inputPassHandler = pass => this.setState({pass});
@@ -51,7 +44,7 @@ class LoginPage extends Component {
 
   render() {
     const { loading, idToken } = this.props;
-    
+
     const form = (
       <form 
         className={classes.form} 
@@ -89,9 +82,9 @@ class LoginPage extends Component {
     )
 
     return(
-      <>
-      {idToken ? <Navigate to={'/contacts'}/> : form}
-      </>
+      <>{
+        idToken ? <Navigate to={'/contacts'}/> : form
+      }</>
 
            
     )
@@ -108,7 +101,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   loadingOn,
   login,
-  logout
+  autoLogin
 }
 
 export default WithService()(connect(mapStateToProps, mapDispatchToProps)(LoginPage));
