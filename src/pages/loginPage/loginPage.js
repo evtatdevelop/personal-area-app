@@ -6,17 +6,13 @@ import Button from '../../components/button';
 import Spinner from '../../components/spinner';
 import { connect } from 'react-redux';
 import WithService from '../../components/hoc';
-import { loadingOn, login, autoLogin } from '../../actions';
+import { loadingOn, login } from '../../actions';
 
 class LoginPage extends Component {
   
   mailInp = React.createRef();
   passInp = React.createRef();
   state = { mail: '', pass: '', }
-
-  componentDidMount() {
-    this.props.autoLogin()
-  }
 
   auth = ({mail, pass}) => {
     const {Service, login, loadingOn} = this.props;
@@ -100,8 +96,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   loadingOn,
-  login,
-  autoLogin
+  login
 }
 
 export default WithService()(connect(mapStateToProps, mapDispatchToProps)(LoginPage));

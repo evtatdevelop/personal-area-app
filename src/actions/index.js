@@ -34,9 +34,8 @@ const autoLogin = () => {
     const expDate = new Date(localStorage.getItem('expDate'))
     if ( expDate <= new Date() ) return {type: 'LOGOUT'}
     else {
-      const expiresIn = (expDate.getTime() - new Date().getTime()) / 1000;
       localStorage.setItem('idToken', idToken)
-      localStorage.setItem('expDate', expiresIn)
+      localStorage.setItem('expDate', expDate)
       return {type: 'LOGIN', payload: idToken}
     }
   }  
